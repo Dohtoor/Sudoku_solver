@@ -34,5 +34,3 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
-
-win32:RC_ICONS += your_icon.ico
