@@ -91,7 +91,7 @@
             }
     }
 
-    int sudoku::get(int i, int j)
+    int sudoku::get(int i, int j)                                           //просмотр элемента i, j
     {
         return table[i][j][0];
     }
@@ -107,7 +107,7 @@
                     }
     }
 
-    void sudoku::set(int i, int j, int m)
+    void sudoku::set(int i, int j, int m)                                   //установка в элемент i, j значение m
     {
         if ((m < 0) || (m > 9))
         {
@@ -122,59 +122,64 @@
     }
 
     bool sudoku::check(int fI, int fJ)													//пытаемся подобрать решение путем переборов всех доступных элементов в третьем измерении массива
-    {
+    {                                                                                   //начиная с элемента fI, fJ
         int d;
-                bool ifX = true, ifY = true;
+               bool ifX = true, ifY = true;                                             //флаги для пропуска ненужных элементов
 
                 for (int i = 0; i < 9; i++)
                 {
-                    if (ifX && (i != fI))
+                    if (ifX && (i != fI))                                               //пропуск столбцов
                         continue;
                     for (int j = 0; j < 9; j++)
                     {
                         ifX = false;
-                        if (ifY && (j != fJ))
+                        if (ifY && (j != fJ))                                           //пропуск строк
                             continue;
                         ifY = false;
                         for (int k = 1; k < 11; k++)
                         {
-                            if (table[i][j][k] != 0)
+                            if (table[i][j][k] != 0)                                    //если в ячейке нет числа, начинаем попытку подобрать число
                             {
                                 if (!ComBoxBefore(i, j, table[i][j][k]) && !ComLineBefore(i, j, table[i][j][k]))
-                                {
+                                {                                                       //если число не конфликтует с уже вставленными числами, вставляем его
+                                                                                        //и записываем информацию для возможной отмены этого действия
                                     table[i][j][0] = table[i][j][k];
                                     d = table[i][j][1];
                                     table[i][j][1] = 0;
-                                    if (!check(i, j))
+                                    if (!check(i, j))                                   //начинаем новую проверку начиная с элемента, который мы только что вставили
+                                                                                        //если функция не закончилась успешным прохождением, то отменяем вставку
                                     {
                                         table[i][j][1] = d;
                                         table[i][j][0] = 0;
                                     }
-                                    else return true;
+                                    else return true;                                   //функция вернулась со значением true, значит мы дошли до конца массива успешно
+                                                                                        //тогда возвращаем истину предыдущей рекурсии
                                 }
                             }
-                            else break;
+                            else break;                                                 //если число в третьем измерении равно нулю, все остальные чила там раны нулю
                         }
 
-                        if (table[i][j][0] == 0)
+                        if (table[i][j][0] == 0)                                        //если мы прошли через третье измерение и не нашли допустимых вариантов, 
+                                                                                        //возвращаем ложь предыдущей рекурсии
                             return false;
                     }
                 }
-                return true;
+                return true;                                                            //если мы прошли через весь цикл успешно, возвращаем истину
     }
 
     void sudoku::solve()
     {
-        bool canStart = false;
+        bool canStart = false;                                                          //флаг, проверяющий, есть ли ячейки с только одним вариантом
                 
-                while (!canStart)
+                while (!canStart)                                                       
                 {
-                    createPos();
+                    createPos();                                                        //генерируем возможные элементы
                     canStart = true;
                     for (int i = 0; i < 9; i++)
                         for (int j = 0; j < 9; j++)
                         {
-                            if (table[i][j][2] == 0)
+                            if (table[i][j][2] == 0)                                    //если третье число равно нулю, тогда в ячейку можно поместить 
+                                                                                        //только одно значение; помещаем его
                             {
                                 canStart = false;
                                 table[i][j][0] = table[i][j][1];
@@ -184,11 +189,11 @@
                         }
                 }
 
-                check(0, 0);
+                check(0, 0);                                                            //вызываем проверку с начала
                 return;
     }
 
-    void sudoku::reset()
+    void sudoku::reset()                                                                //обнуляем объект
     {
         for (int i=0; i<9; i++)
             for (int j=0; j<9; j++)
