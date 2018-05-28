@@ -166,10 +166,10 @@
     void sudoku::solve()
     {
         bool canStart = false;
-                createPos();
-
+                
                 while (!canStart)
                 {
+                    createPos();
                     canStart = true;
                     for (int i = 0; i < 9; i++)
                         for (int j = 0; j < 9; j++)
